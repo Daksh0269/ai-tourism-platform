@@ -4,7 +4,7 @@ const errorHandler = require('./middleware/errorHandler');
 
 // Route Imports
 const userRoutes = require('./modules/users/user.routes');
-
+const tourismRoutes = require('./modules/tourism/tourism.routes');
 const app = express();
 
 app.use(cors({ origin: '*' }));
@@ -28,7 +28,7 @@ app.get('/health', (req, res) => {
 // Modular Routes Registration
 app.use('/api/v1/users', userRoutes);
 // Future phases will mount here:
-// app.use('/api/v1/tourism', tourismRoutes);
+app.use('/api/v1/tourism', tourismRoutes);
 // app.use('/api/v1/itineraries', itineraryRoutes);
 // app.use('/api/v1/crowd', crowdRoutes);
 // app.use('/api/v1/grievance', grievanceRoutes);
