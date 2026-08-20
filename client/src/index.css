@@ -1,133 +1,111 @@
-@import "tailwindcss";
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-@theme {
-  --color-surface-container-lowest: #ffffff;
-  --color-secondary-fixed-dim: #ddb7ff;
-  --color-outline-variant: #c7c4d7;
-  --color-on-primary: #ffffff;
-  --color-tertiary-fixed: #acedff;
-  --color-inverse-primary: #c0c1ff;
-  --color-on-primary-container: #fffbff;
-  --color-surface-dim: #d2d9f4;
-  --color-error-container: #ffdad6;
-  --color-on-primary-fixed-variant: #2f2ebe;
-  --color-background: #faf8ff;
-  --color-surface-container-high: #e2e7ff;
-  --color-surface: #faf8ff;
-  --color-outline: #767586;
-  --color-tertiary: #006577;
-  --color-tertiary-fixed-dim: #4cd7f6;
-  --color-inverse-surface: #283044;
-  --color-tertiary-container: #008096;
-  --color-primary-container: #6063ee;
-  --color-primary: #4648d4;
-  --color-inverse-on-surface: #eef0ff;
-  --color-on-error: #ffffff;
-  --color-on-primary-fixed: #07006c;
-  --color-surface-variant: #dae2fd;
-  --color-surface-bright: #faf8ff;
-  --color-secondary: #8127cf;
-  --color-on-secondary: #ffffff;
-  --color-on-tertiary-container: #f9fdff;
-  --color-on-tertiary: #ffffff;
-  --color-on-error-container: #93000a;
-  --color-on-secondary-container: #fffbff;
-  --color-surface-container-low: #f2f3ff;
-  --color-on-secondary-fixed-variant: #6900b3;
-  --color-on-tertiary-fixed: #001f26;
-  --color-surface-container: #eaedff;
-  --color-error: #ba1a1a;
-  --color-on-secondary-fixed: #2c0051;
-  --color-on-surface: #131b2e;
-  --color-on-surface-variant: #464554;
-  --color-primary-fixed-dim: #c0c1ff;
-  --color-surface-tint: #494bd6;
-  --color-on-background: #131b2e;
-  --color-on-tertiary-fixed-variant: #004e5c;
-  --color-secondary-container: #9c48ea;
-  --color-surface-container-highest: #dae2fd;
-  --color-secondary-fixed: #f0dbff;
-  --color-primary-fixed: #e1e0ff;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
 
-  --radius-DEFAULT: 0.25rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --radius-full: 9999px;
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 
-  --spacing-stack-md: 24px;
-  --spacing-gutter: 24px;
-  --spacing-stack-lg: 48px;
-  --spacing-margin-desktop: 40px;
-  --container-container-max: 1280px;
-  --spacing-stack-sm: 12px;
-  --spacing-margin-mobile: 16px;
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
 
-  --font-display-lg-mobile: "Montserrat", sans-serif;
-  --font-body-lg: "Inter", sans-serif;
-  --font-display-lg: "Montserrat", sans-serif;
-  --font-headline-md: "Montserrat", sans-serif;
-  --font-label-sm: "Inter", sans-serif;
-  --font-body-md: "Inter", sans-serif;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
 
-  --text-display-lg-mobile: 32px;
-  --text-display-lg-mobile--line-height: 1.2;
-  --text-display-lg-mobile--letter-spacing: -0.01em;
-  --text-display-lg-mobile--font-weight: 700;
-
-  --text-body-lg: 18px;
-  --text-body-lg--line-height: 1.6;
-  --text-body-lg--letter-spacing: 0;
-  --text-body-lg--font-weight: 400;
-
-  --text-display-lg: 48px;
-  --text-display-lg--line-height: 1.2;
-  --text-display-lg--letter-spacing: -0.02em;
-  --text-display-lg--font-weight: 700;
-
-  --text-headline-md: 24px;
-  --text-headline-md--line-height: 1.4;
-  --text-headline-md--letter-spacing: 0.05em;
-  --text-headline-md--font-weight: 600;
-
-  --text-label-sm: 12px;
-  --text-label-sm--line-height: 1;
-  --text-label-sm--letter-spacing: 0.1em;
-  --text-label-sm--font-weight: 600;
-
-  --text-body-md: 16px;
-  --text-body-md--line-height: 1.5;
-  --text-body-md--letter-spacing: 0;
-  --text-body-md--font-weight: 400;
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
 }
 
 body {
   margin: 0;
 }
 
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
-.glass-panel {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
 }
-.text-gradient {
-  background: linear-gradient(135deg, #4648d4 0%, #8127cf 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
 }
-.btn-gradient {
-  background: linear-gradient(135deg, #4648d4 0%, #8127cf 100%);
-  box-shadow: 0 4px 14px 0 rgba(70, 72, 212, 0.39);
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
 }
