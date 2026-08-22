@@ -1,122 +1,122 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { account, getSessionToken } from './lib/appwrite';
+import { ID } from 'appwrite';
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [user, setUser] = useState(null);
+  const [jwt, setJwt] = useState('');
+  const [logs, setLogs] = useState([]);
+
+  // Form states
+  const [email, setEmail] = useState('test@example.com');
+  const [password, setPassword] = useState('password123');
+
+  const addLog = (message, data = null) => {
+    setLogs(prev => [`[${new Date().toLocaleTimeString()}] ${message} ${data ? JSON.stringify(data) : ''}`, ...prev].slice(0, 5));
+  };
+
+  // --- AUTH METHODS ---
+  const handleRegister = async () => {
+    try {
+      await account.create(ID.unique(), email, password, 'Test User');
+      addLog("Registered successfully. Now logging in...");
+      await handleLogin();
+    } catch (err) {
+      addLog("Register Error", err.message);
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      await account.createEmailPasswordSession(email, password);
+      const user = await account.get();
+      const token = await getSessionToken();
+      setUser(user);
+      setJwt(token);
+      addLog("Logged in!", { name: user.name });
+    } catch (err) {
+      addLog("Login Error", err.message);
+    }
+  };
+
+  const handleLogout = async () => {
+    await account.deleteSession('current');
+    setUser(null);
+    setJwt('');
+    addLog("Logged out");
+  };
+
+  // --- API TEST METHODS ---
+  const fetchApi = async (endpoint, method = 'GET', body = null) => {
+    try {
+      addLog(`Sending ${method} to ${endpoint}...`);
+      const headers = { 'Content-Type': 'application/json' };
+      if (jwt) headers['Authorization'] = `Bearer ${jwt}`;
+
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        method,
+        headers,
+        body: body ? JSON.stringify(body) : null
+      });
+      const data = await res.json();
+      addLog(`Response from ${endpoint}:`, data);
+      return data;
+    } catch (err) {
+      addLog(`Fetch error on ${endpoint}:`, err.message);
+    }
+  };
+
+  const testAiEndpoint = () => {
+    fetchApi('/test-ai', 'POST'); // The Phase 7 test endpoint
+  };
+
+  const testGetAttractions = () => {
+    fetchApi('/tourism'); // Public endpoint, no JWT strictly needed depending on your routes
+  };
+
+  const testGetMe = () => {
+    fetchApi('/users/me'); // Requires JWT auth
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '800px', margin: '0 auto' }}>
+      <h1>🛠️ AI Tourism - Testing Dashboard</h1>
+      
+      <div style={{ padding: '20px', border: '1px solid #ccc', marginBottom: '20px' }}>
+        <h2>1. Authentication</h2>
+        {!user ? (
+          <div>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" />
+            <button onClick={handleLogin}>Login</button>
+            <button onClick={handleRegister}>Register</button>
+          </div>
+        ) : (
+          <div>
+            <p>Logged in as: <strong>{user.email}</strong></p>
+            <p style={{fontSize: '12px', wordBreak: 'break-all'}}>JWT: {jwt}</p>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
+        )}
+      </div>
 
-      <div className="ticks"></div>
+      <div style={{ padding: '20px', border: '1px solid #ccc', marginBottom: '20px' }}>
+        <h2>2. Backend Endpoints</h2>
+        <button onClick={testAiEndpoint}>Test AI Fallback (/test-ai)</button>
+        <button onClick={testGetAttractions}>Fetch Attractions (/tourism)</button>
+        <button onClick={testGetMe} disabled={!jwt}>Test Protected Route (/users/me)</button>
+      </div>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <div style={{ padding: '20px', background: '#1e1e1e', color: '#00ff00', height: '300px', overflowY: 'auto' }}>
+        <h3>Terminal Logs</h3>
+        {logs.map((log, i) => (
+          <div key={i} style={{ marginBottom: '8px', fontSize: '14px' }}>{log}</div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default App
+export default App;

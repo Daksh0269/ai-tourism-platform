@@ -39,5 +39,4 @@ class ItineraryRepository {
     return result.documents[0] || null;
   }
 }
-
-module.exports = new ItineraryRepository();
+module.exports = new TourismRepository();
