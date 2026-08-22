@@ -11,7 +11,7 @@ const env = {
     databaseId: process.env.APPWRITE_DATABASE_ID,
   },
   ai: {
-    geminiApiKey: process.env.GEMINI_API_KEY,
+    geminiKey: process.env.GEMINI_API_KEY,
     openRouterKey: process.env.OPENROUTER_API_KEY,
   }
 };
