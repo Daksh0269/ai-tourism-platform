@@ -11,7 +11,7 @@ const generateJson = async (prompt, systemInstruction) => {
   
   // We use gemini-1.5-flash for speed and generous free tier
   const model = genAI.getGenerativeModel({
-    model: "mistralai/mistral-7b-instruct:free",
+    model: "gemini-1.5-flash", // <--- CHANGE THIS LINE
     systemInstruction: systemInstruction,
     generationConfig: { responseMimeType: "application/json" }
   });
