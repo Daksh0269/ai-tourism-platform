@@ -1,42 +1,38 @@
 const dbService = require('../../services/appwrite/database.service');
 const { Query } = require('../../services/appwrite/appwrite.client');
 
-const ITINERARIES_COLLECTION = 'itineraries';
-const VERSIONS_COLLECTION = 'itinerary_versions';
+const COLLECTION_ID = 'attractions';
 
-class ItineraryRepository {
-  async createItinerary(data) {
-    return await dbService.createDocument(ITINERARIES_COLLECTION, data);
+class TourismRepository {
+  async create(data) {
+    return await dbService.createDocument(COLLECTION_ID, data);
   }
 
-  async getItineraryById(id) {
-    return await dbService.getDocument(ITINERARIES_COLLECTION, id);
+  async getById(id) {
+    return await dbService.getDocument(COLLECTION_ID, id);
   }
 
-  async updateItinerary(id, data) {
-    return await dbService.updateDocument(ITINERARIES_COLLECTION, id, data);
+  async list(filters = {}) {
+    const queries = [];
+    
+    // Add Appwrite queries based on filters
+    if (filters.category) queries.push(Query.contains('categories', filters.category));
+    if (filters.location) queries.push(Query.equal('location', filters.location));
+    if (filters.tag) queries.push(Query.contains('tags', filters.tag));
+    
+    // Default limit
+    queries.push(Query.limit(filters.limit || 50));
+    
+    return await dbService.listDocuments(COLLECTION_ID, queries);
   }
 
-  async createVersion(versionData) {
-    return await dbService.createDocument(VERSIONS_COLLECTION, versionData);
+  async update(id, data) {
+    return await dbService.updateDocument(COLLECTION_ID, id, data);
   }
 
-  async getVersionsByItineraryId(itineraryId) {
-    const queries = [
-      Query.equal('itineraryId', itineraryId),
-      Query.orderDesc('versionNumber')
-    ];
-    return await dbService.listDocuments(VERSIONS_COLLECTION, queries);
-  }
-
-  async getSpecificVersion(itineraryId, versionNumber) {
-    const queries = [
-      Query.equal('itineraryId', itineraryId),
-      Query.equal('versionNumber', Number(versionNumber)),
-      Query.limit(1)
-    ];
-    const result = await dbService.listDocuments(VERSIONS_COLLECTION, queries);
-    return result.documents[0] || null;
+  async delete(id) {
+    return await dbService.deleteDocument(COLLECTION_ID, id);
   }
 }
+
 module.exports = new TourismRepository();

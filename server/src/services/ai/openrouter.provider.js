@@ -11,7 +11,7 @@ const generateJson = async (prompt, systemInstruction) => {
     },
     body: JSON.stringify({
       // Llama 3 8B is typically free and very fast on OpenRouter
-      model: "meta-llama/llama-3-8b-instruct:free", 
+      model: "meta-llama/llama-3.1-8b-instruct:free",
       messages: [
         { 
           role: "system", 
