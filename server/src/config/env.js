@@ -13,6 +13,7 @@ const env = {
   ai: {
     geminiKey: process.env.GEMINI_API_KEY,
     openRouterKey: process.env.OPENROUTER_API_KEY,
+    groqKey: process.env.GROQ_API_KEY,
   }
 };
 
