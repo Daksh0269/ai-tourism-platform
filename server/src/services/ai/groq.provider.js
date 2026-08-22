@@ -10,7 +10,7 @@ const generateJson = async (prompt, systemInstruction) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "llama3-8b-8192", // Blazing fast model on Groq
+      model: "openai/gpt-oss-20b", // Blazing fast model on Groq
       response_format: { type: "json_object" }, // Forces valid JSON output
       messages: [
         { 
