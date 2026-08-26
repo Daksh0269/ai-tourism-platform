@@ -1,17 +1,35 @@
-const { getIo, getUserSocket } = require('../sockets/socket');
+const { Server } = require('socket.io');
 
-class NotificationService {
-  notifyUser(userId, eventName, payload) {
-    const io = getIo();
-    const socketId = getUserSocket(userId);
+let io;
+const userSockets = new Map();
 
-    if (io && socketId) {
-      io.to(socketId).emit(eventName, payload);
-      console.log(`[Notification] Emitted '${eventName}' to User ${userId}`);
-      return true;
+const initSockets = (server) => {
+  io = new Server(server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST']
     }
-    return false;
-  }
-}
+  });
 
-module.exports = new NotificationService();
+  io.on('connection', (socket) => {
+    const userId = socket.handshake.auth?.userId;
+    if (userId) {
+      userSockets.set(userId, socket.id);
+      console.log(`[Socket] User connected: ${userId} (${socket.id})`);
+    }
+
+    socket.on('disconnect', () => {
+      if (userId) {
+        userSockets.delete(userId);
+        console.log(`[Socket] User disconnected: ${userId}`);
+      }
+    });
+  });
+
+  return io;
+};
+
+const getIo = () => io;
+const getUserSocket = (userId) => userSockets.get(userId);
+
+module.exports = { initSockets, getIo, getUserSocket };
