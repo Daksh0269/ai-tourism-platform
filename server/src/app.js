@@ -9,7 +9,7 @@ const tourismRoutes = require('./modules/tourism/tourism.routes');
 const itineraryRoutes = require('./modules/itinerary/itinerary.routes');
 const aiService = require('./services/ai/ai.service');
 const app = express();
-
+const grievanceRoutes = require('./modules/grievance/grievance.routes');
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,7 +35,7 @@ app.use('/api/v1/tourism', tourismRoutes);
 app.use('/api/v1/itineraries', itineraryRoutes);
 
 // app.use('/api/v1/crowd', crowdRoutes);
-// app.use('/api/v1/grievance', grievanceRoutes);
+app.use('/api/v1/grievance', grievanceRoutes);
 
 // Global Error Handler
 app.use(errorHandler);
